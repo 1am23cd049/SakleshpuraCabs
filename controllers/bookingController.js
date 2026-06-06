@@ -213,8 +213,8 @@ exports.createBooking = async (req, res) => {
       // Create booking with cash payment
       booking = await Booking.create({
         userId,
-        pickupPlaceId,
-        dropPlaceId,
+        pickupPlace: pickupPlaceId,
+        dropPlace: dropPlaceId,
         fare,
         platformFee,
         driverEarning,
