@@ -238,6 +238,10 @@ exports.createBooking = async (req, res) => {
       });
     }
   } catch (error) {
+    console.error("========== CREATE BOOKING ERROR ==========");
+    console.error(error);
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
     return res.status(500).json({
       success: false,
       message: 'Error creating booking',
