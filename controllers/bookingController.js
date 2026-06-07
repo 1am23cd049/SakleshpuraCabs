@@ -128,10 +128,10 @@ exports.createBooking = async (req, res) => {
     console.log(`[Booking] CREATE REQUEST - User: ${userId}, Pickup: ${pickupPlaceId}, Drop: ${dropPlaceId}, Method: ${paymentMethod}`);
     console.log(`[Booking] Full request body:`, JSON.stringify(req.body, null, 2));
 
-    // Check if user already has an active booking
+    // Check if user already has an active booking (exclude pending - those are payment incomplete)
     const activeBooking = await Booking.findOne({
       userId,
-      status: { $in: ['pending', 'searching', 'accepted', 'started'] }
+      status: { $in: ['searching', 'accepted', 'started'] }
     });
 
     if (activeBooking) {
@@ -491,9 +491,10 @@ exports.activeBooking = async (req, res) => {
     let query;
 
     if (req.role === 'user') {
+      // FIXED: Exclude 'pending' status - pending means payment not completed
       query = {
         userId: req.user._id,
-        status: { $in: ['pending', 'searching', 'accepted', 'started'] }
+        status: { $in: ['searching', 'accepted', 'started'] }
       };
       console.log(`[Booking] GET ACTIVE BOOKING - User: ${req.user._id}`);
     } else if (req.role === 'driver') {
