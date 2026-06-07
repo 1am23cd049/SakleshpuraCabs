@@ -1,4 +1,4 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
@@ -9,6 +9,7 @@ const fileUpload = require("express-fileupload");
 const { Server } = require("socket.io");
 const connectDB = require("./config/db");
 const { initSocket } = require("./socket/socketHandler");
+const { initializeBookingCleanup } = require("./utils/bookingCleanup");
 const authRoutes = require("./routes/authRoutes");
 const driverRoutes = require("./routes/driverRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
@@ -35,6 +36,9 @@ app.set('io', io);
 app.locals.io = io;
 app.locals.userSockets = userSockets;
 app.locals.driverSockets = driverSockets;
+
+// Initialize booking cleanup scheduler
+initializeBookingCleanup();
 
 app.use(helmet());
 app.use(cors({ origin: "*" }));
